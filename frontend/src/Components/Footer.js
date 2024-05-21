@@ -12,7 +12,7 @@ function Footer() {
             <h2>Intelligent Symptomate</h2>
           </div>
 
-          <ul>
+          <ul className='footerUl'>
             <li><Link to="/">Home</Link></li>
             <li><Link to="/reports">Reports</Link></li>
             <li><Link to="/about">About</Link></li>

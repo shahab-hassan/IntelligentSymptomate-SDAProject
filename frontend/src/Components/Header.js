@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
 function Header() {
   const [menuOpened, setMenuOpened] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 770);
+  const menuRef = useRef(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -13,53 +14,60 @@ function Header() {
       }
     };
 
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuOpened(false);
+      }
+    };
+
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
 
-  const handleOpenMenu = () => {
-    setMenuOpened(true);
-  };
-
-  const handleCloseMenu = () => {
-    setMenuOpened(false);
+  const toggleMenu = () => {
+    setMenuOpened(!menuOpened);
   };
 
   return (
     <header>
       <div className="logoDiv">
-        <img src="./images/logo.png" alt="Error"/>
+        <img src="./images/logo.png" alt="Error" />
       </div>
-      <nav>
-        <div className="nav_container">
-          <ul className='ul' style={{ display: isMobile ? (menuOpened ? 'flex' : 'none') : 'flex' }}>
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/reports">Reports</Link></li>
-            <li><Link to="/about">About</Link></li>
-            <li><Link to="/blog">Blog</Link></li>
-            <li><Link to="/contact">Contact</Link></li>
-            <li><Link to="/login" className='btnSecondary'>Login</Link></li>
-            <li><Link to="/register" className='btn'>Register</Link></li>
-          </ul>
-          {isMobile && (
-            <>
-              <button 
-                id="open_menu_btn" 
-                onClick={handleOpenMenu} 
-                style={{ display: menuOpened ? 'none' : 'inline-block' }}
-              >
-                <i className="fa-solid fa-bars"></i>
-              </button>
-              <button 
-                id="close_menu_btn" 
-                onClick={handleCloseMenu} 
-                style={{ display: menuOpened ? 'inline-block' : 'none' }}
-              >
-                <i className="fa-solid fa-xmark"></i>
-              </button>
-            </>
-          )}
-        </div>
+
+      <nav ref={menuRef}>
+        <ul className='ul' style={{ display: isMobile ? (menuOpened ? 'flex' : 'none') : 'flex' }}>
+          <li><Link to="/" onClick={toggleMenu}>Home</Link></li>
+          <li><Link to="/reports" onClick={toggleMenu}>Reports</Link></li>
+          <li><Link to="/about" onClick={toggleMenu}>About</Link></li>
+          <li><Link to="/blog" onClick={toggleMenu}>Blog</Link></li>
+          <li><Link to="/contact" onClick={toggleMenu}>Contact</Link></li>
+          <li><Link to="/login" className={isMobile ? "" : "btnSecondary"} onClick={toggleMenu}>Login</Link></li>
+          <li><Link to="/register" className={isMobile ? "" : "btn"} onClick={toggleMenu}>Register</Link></li>
+        </ul>
+
+        {isMobile && (
+          <>
+            <button
+              id="open_menu_btn"
+              onClick={toggleMenu}
+              style={{ display: menuOpened ? 'none' : 'inline-block' }}
+            >
+              <i className="fa-solid fa-bars"></i>
+            </button>
+            <button
+              id="close_menu_btn"
+              onClick={toggleMenu}
+              style={{ display: menuOpened ? 'inline-block' : 'none' }}
+            >
+              <i className="fa-solid fa-xmark"></i>
+            </button>
+          </>
+        )}
       </nav>
     </header>
   );

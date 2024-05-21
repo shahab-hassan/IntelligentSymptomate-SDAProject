@@ -56,13 +56,14 @@ section{
     align-items: center;
     width: fit-content;
     gap: 10px;
-    color: white;
+    color: white !important;
     padding: 6px 20px;
     background-color: var(--primary);
     border-radius: 8px;
     border: 2px solid transparent;
     transition: 0.2s;
     cursor: pointer;
+    font-weight: 500;
 }
 
 .btnSecondary, .btn:hover{
@@ -70,7 +71,7 @@ section{
     align-items: center;
     width: fit-content;
     gap: 10px;
-    color: black;
+    color: black !important;
     padding: 6px 20px;
     background: transparent;
     border-radius: 8px;
@@ -99,21 +100,28 @@ header{
     width: 35px;
 }
 
-ul{
+
+.ul, .footerUl{
     display: flex;
     gap: 30px;
     align-items: center;
 }
 
-ul li a{
+.ul li a, .footerUl li a{
     font-size: 14px;
     color: black;
 }
-#open_menu_btn{
+
+.ul li a:hover, .footerUl li a:hover{
+    color: var(--primary);
+}
+
+#open_menu_btn, #close_menu_btn{
     outline: none;
     background: transparent;
     border: none;
     font-size: 2rem;
+    box-shadow: none;
 }
 
 
@@ -182,8 +190,8 @@ ul li a{
     margin-top: 25px;
 }
 .heroBtns .btn:hover{
-    color: white;
-    border-color: white;
+    color: white !important;
+    border-color: white !important;
 }
 .heroBtns i{
     margin-top: 5px;
@@ -363,8 +371,10 @@ input::placeholder{
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    margin: 70px 0px;
+    margin: 70px auto;
     gap: 20px;
+    width: 85%;
+    text-align: center;
 }
 
 .notFoundDiv .notFoundImgDiv{
@@ -395,39 +405,78 @@ input::placeholder{
     }
 }
 @media only screen and (max-width: 770px) {
-    .footerLower{
-        font-size: 10px;
-    }
-    .nav_container{
-        position: relative;
-    }
-    ul{
-        position: absolute;
-        top: 10%;
-        right: 5%;
-        flex-direction: column;
-        gap: 0px;
-        display: none;
-    }
-    ul li{
-        width: 100%;
-        background-color: var(--primary);
-        text-align: center;
-        padding: 8px 15px;
-    }
-    ul li a{
-        color: white;
-    }
-}
-@media only screen and (max-width: 770px) {
     .blogHomeLower{
         grid-template-columns: repeat(2, 1fr);
     }
     .footerLower{
         flex-direction: column;
         gap: 10px;
+        font-size: 10px;
+    }
+    .ul{
+        position: absolute;
+        top: 10%;
+        right: 7%;
+        flex-direction: column;
+        gap: 0;
+        z-index: 100;
+        width: 50%;
+    }
+    .ul li{
+        width: 100%;
+        height: 3rem;
+        background-color: var(--primary);
+        animation: navbarMenuAnimation 200ms linear forwards;
+        transform-origin: top right;
+        opacity: 0;
+    }
+    .ul li:nth-child(2) {
+        animation-delay: 100ms;
+    }
+
+    .ul li:nth-child(3) {
+        animation-delay: 150ms;
+    }
+
+    .ul li:nth-child(4) {
+        animation-delay: 200ms;
+    }
+    .ul li:nth-child(5) {
+        animation-delay: 250ms;
+    }
+    .ul li:nth-child(6) {
+        animation-delay: 300ms;
+    }
+    .ul li:nth-child(7) {
+        animation-delay: 350ms;
+    }
+    .ul li a{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        width: 100%;
+        height: 100%;
+    }
+    .footerUl{
+        display: none;
+    }
+
+    .loginDiv, .registerDiv{
+        margin: 60px 0px;
+    }
+    .loginImgDiv, .registerImgDiv{
+        display: none;
+    }
+    .loginBox, .registerBox{
+        width: 90%;
+    }
+    .registerForm .loginBtnDiv, .loginForm .registerBtnDiv{
+        font-size: 0.8rem;
     }
 }
+
+
 @media only screen and (max-width: 630px) {
     .heroDiv h1{
         font-size: 40px;
@@ -486,5 +535,17 @@ input::placeholder{
         flex-direction: column;
         gap: 10px;
         font-size: 13px;
+    }
+}
+
+/* =========== KEYFRAMES ============ */
+@keyframes navbarMenuAnimation {
+    0% {
+        transform: rotateZ(-90deg) scale(0.1);
+    }
+
+    100% {
+        transform: rotateZ(0deg) scale(1);
+        opacity: 1;
     }
 }
