@@ -6,9 +6,9 @@ const sendToken = require("../utils/sendToken")
 
 exports.registerUser = asyncHandler(async(req, res)=>{
     
-    let {username, email, password, confirmPass} = req.body;
+    let {firstName, lastName, username, email, password, confirmPass} = req.body;
 
-    if(!username || !email || !password || !confirmPass){
+    if(!firstName || !username || !email || !password || !confirmPass){
         res.status(400)
         throw new Error("All fields are required!")
     }
@@ -23,7 +23,7 @@ exports.registerUser = asyncHandler(async(req, res)=>{
     }
     if(password.length<8){
         res.status(400)
-        throw new Error("Use 8 or more characters with a mix of letters, numbers & symbols!")
+        throw new Error("For password, use 8 or more characters with a mix of letters, numbers & symbols!")
     }
 
     if(password !== confirmPass){
@@ -33,9 +33,11 @@ exports.registerUser = asyncHandler(async(req, res)=>{
     
     let hashPassword = await bcrypt.hash(password, 10);
     
+    let fullName = firstName + " " + lastName;
+
     let newUser;
     try{
-        newUser = await userModel.create({username, email, password: hashPassword});
+        newUser = await userModel.create({fullName, username, email, password: hashPassword});
     }
     catch(e){
         res.status(400)

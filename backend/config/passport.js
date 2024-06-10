@@ -17,7 +17,7 @@ passport.use(new GoogleStrategy({
         while(await User.findOne({username})){
           username = username.concat(Math.ceil(Math.random()*10000));
         }
-        user = await User.create({ googleId: id, username, email: emails[0].value });
+        user = await User.create({ googleId: id, fullName: displayName, username, email: emails[0].value });
       }
       return done(null, user);
     } catch (err) {
@@ -41,7 +41,7 @@ passport.use(new FacebookStrategy({
         while(await User.findOne({username})){
           username = username.concat(Math.ceil(Math.random()*10000));
         }
-        user = await User.create({ facebookId: id, username, email: emails[0].value });
+        user = await User.create({ facebookId: id, fullName: displayName, username, email: emails[0].value });
       }
       return done(null, user);
     } catch (err) {

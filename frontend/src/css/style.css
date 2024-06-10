@@ -328,6 +328,15 @@ label{
     padding: 8px 15px;
 }
 
+.inputField .passwordInput{
+    display: flex;
+    align-items: center;
+}
+.inputField .passwordInput .hidePasswordBtn{
+    cursor: pointer;
+    color: #00000080;
+}
+
 input{
     outline: none;
     border: none;
@@ -346,6 +355,7 @@ input::placeholder{
     padding: 10px 0px;
     font-size: 14px;
 }
+
 .registerForm img{
     margin-right: 20px;
 }
@@ -362,6 +372,9 @@ input::placeholder{
     font-weight: 500;
 }
 
+.socialSigninDiv .socialSigninBtn{
+    margin-bottom: 10px;
+}
 
 
 /********************** NOT FOUND ***********************/

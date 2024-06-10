@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import {articles} from "../../data/blogsData"
+import {articles} from "../../services/blogsData"
 
 function BlogHome() {
 
@@ -20,6 +20,7 @@ function BlogHome() {
                 </div>
             </Link>
         }
+        return "";
     })
 
     return (

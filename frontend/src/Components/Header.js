@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 
-function Header() {
+function Header({isLoggedin, setIsLoggedin}) {
+
   const [menuOpened, setMenuOpened] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 770);
   const menuRef = useRef(null);
+  const {enqueueSnackbar} = useSnackbar();
 
   useEffect(() => {
     const handleResize = () => {
@@ -31,7 +34,14 @@ function Header() {
 
   const toggleMenu = () => {
     setMenuOpened(!menuOpened);
-  };
+    };
+    
+    const logoutUser = ()=>{
+      setMenuOpened(!menuOpened);
+      localStorage.setItem("isLoggedin", false)
+      setIsLoggedin(false);
+      enqueueSnackbar("Logged out Successfully!", {variant: "success"});
+    }
 
   return (
     <header>
@@ -46,8 +56,9 @@ function Header() {
           <li><Link to="/about" onClick={toggleMenu}>About</Link></li>
           <li><Link to="/blog" onClick={toggleMenu}>Blog</Link></li>
           <li><Link to="/contact" onClick={toggleMenu}>Contact</Link></li>
-          <li><Link to="/login" className={isMobile ? "" : "btnSecondary"} onClick={toggleMenu}>Login</Link></li>
-          <li><Link to="/register" className={isMobile ? "" : "btn"} onClick={toggleMenu}>Register</Link></li>
+          {!isLoggedin && <li><Link to="/login" className={isMobile ? "" : "btnSecondary"} onClick={toggleMenu}>Login</Link></li>}
+          {!isLoggedin && <li><Link to="/register" className={isMobile ? "" : "btn"} onClick={toggleMenu}>Register</Link></li>}
+          {isLoggedin && <li><Link to="/" className={isMobile ? "" : "btn"} onClick={logoutUser}>Logout</Link></li>}
         </ul>
 
         {isMobile && (
