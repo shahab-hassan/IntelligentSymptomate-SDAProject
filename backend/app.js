@@ -1,24 +1,35 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-
+const express = require("express")
 const app = express();
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const passport = require('passport');
+const session = require("express-session");
 
-app.use(bodyParser.json());
-app.use(cors());
+// Config Dotenv
+require("dotenv").config({path: "./config/.env"})
 
-const userRoutes = require('./routes/users');
-const symptomRoutes = require('./routes/symptoms');
-const diagnosisRoutes = require('./routes/diagnosis');
-const skinLesionRoutes = require('./routes/skinLesions');
+require("./config/passport.js");
 
-app.use('/api/users', userRoutes);
-app.use('/api/symptoms', symptomRoutes);
-app.use('/api/diagnosis', diagnosisRoutes);
-app.use('/api/skin-lesions', skinLesionRoutes);
+const errorHandler = require("./middlewares/errorHandlerMW");
 
-mongoose.connect('mongodb://localhost:27017/SDAProject').then(() => console.log('MongoDB connected'))
-  .catch(err => console.log(err));
+app.use(express.json());
+app.use(cors())
+app.use(cookieParser())
+
+app.use(session({
+    secret: process.env.SESSION_SECRET, 
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } 
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Routes:
+app.use("/api/v1/", require("./routes/userRoute"))
+
+// Middlewares:
+app.use(errorHandler);
 
 module.exports = app;
