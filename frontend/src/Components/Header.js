@@ -37,10 +37,12 @@ function Header({isLoggedin, setIsLoggedin}) {
     };
     
     const logoutUser = ()=>{
+      if(window.confirm("You are logging out from Intellimate...")){
+        localStorage.setItem("isLoggedin", false)
+        setIsLoggedin(false);
+        enqueueSnackbar("Logged out Successfully!", {variant: "success"});
+      }
       setMenuOpened(!menuOpened);
-      localStorage.setItem("isLoggedin", false)
-      setIsLoggedin(false);
-      enqueueSnackbar("Logged out Successfully!", {variant: "success"});
     }
 
   return (

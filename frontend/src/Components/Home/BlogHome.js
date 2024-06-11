@@ -7,7 +7,7 @@ function BlogHome() {
 
     const blogHomeArticles = articles.map((article, index)=>{
         if(index < 3){
-            return <Link to="postDetails" className="post">
+            return <Link to="/postDetails" className="post">
                 <div className="postContent">
                     <div className="postImgDiv">
                         <img src={article.img} alt="Error" className='postImg' />

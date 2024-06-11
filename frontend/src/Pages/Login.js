@@ -69,7 +69,7 @@ function Login({setIsLoggedin}) {
             </div>
 
             <div>
-              <Link to="/login" className='loginBtn'>Forgot Password?</Link>
+              <Link to="/resetPasswordRequest" className='loginBtn'>Forgot Password?</Link>
             </div>
 
             <div>

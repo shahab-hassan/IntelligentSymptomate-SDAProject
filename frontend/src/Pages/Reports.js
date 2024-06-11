@@ -1,11 +1,11 @@
 import React from 'react'
 
-import NotFound from "../Components/NotFound"
+import UnderDevelopment from "../Components/UnderDevelopment"
 
 function Reports() {
   return (
     <div>
-        <NotFound />
+        <UnderDevelopment />
     </div>
   )
 }

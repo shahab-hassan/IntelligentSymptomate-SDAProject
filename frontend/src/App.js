@@ -13,6 +13,9 @@ import Contact from './Pages/Contact';
 import DetectDisease from './Pages/DetectDisease';
 import DetectSkinCancer from './Pages/DetectSkinCancer';
 import PostDetails from './Pages/PostDetails';
+import NotFound from './Components/NotFound.js';
+import ResetPasswordRequest from './Components/ResetPasswordRequest.js';
+import ResetPassword from './Components/ResetPassword.js';
 
 function App() {
 
@@ -45,9 +48,12 @@ function App() {
         <Route path="/reports" element={<Reports />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/detect-disease" element={<DetectDisease/>} />
-        <Route path="/detect-skin-cancer" element={<DetectSkinCancer/>} />
-        <Route path="/postDetails" element={<PostDetails/>} />
+        <Route path="/detect-disease" element={<DetectDisease />} />
+        <Route path="/detect-skin-cancer" element={<DetectSkinCancer />} />
+        <Route path="/postDetails" element={<PostDetails />} />
+        <Route path="/resetPasswordRequest" element={<ResetPasswordRequest />} />
+        <Route path="/resetPassword/:token" element={<ResetPassword />} />
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   );

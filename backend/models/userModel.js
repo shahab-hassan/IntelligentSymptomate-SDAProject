@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const crypto = require("crypto");
 
 const userSchema = mongoose.Schema({
     fullName: {
@@ -29,10 +30,22 @@ const userSchema = mongoose.Schema({
     facebookId: {
         type: String,
     },
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
 },
     {
         timestamps: true
     }
 )
+
+// Method to generate reset token
+userSchema.methods.getResetPasswordToken = function() {
+    const resetToken = crypto.randomBytes(20).toString("hex");
+
+    this.resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+    this.resetPasswordExpire = Date.now() + 30 * 60 * 1000; // Token valid for 30 minutes
+
+    return resetToken;
+};
 
 module.exports = mongoose.model("User", userSchema);

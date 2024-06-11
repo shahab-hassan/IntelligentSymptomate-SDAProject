@@ -235,7 +235,7 @@ header{
     gap: 35px;
     grid-template-columns: repeat(3, 1fr);
     row-gap: 50px;
-    padding: 30px 0px;
+    padding: 30px 8px;
 }
 
 .blogHomeLower .post{
@@ -377,9 +377,9 @@ input::placeholder{
 }
 
 
-/********************** NOT FOUND ***********************/
+/********************** NOT FOUND + UNDER DEVELOPMENT ***********************/
 
-.notFoundDiv{
+.notFoundDiv, .underDevelopmentDiv{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -390,11 +390,11 @@ input::placeholder{
     text-align: center;
 }
 
-.notFoundDiv .notFoundImgDiv{
+.notFoundDiv .notFoundImgDiv, .underDevelopmentDiv .underDevelopmentImgDiv{
     width: 300px;
 }
 
-.notFoundImgDiv img{
+.notFoundImgDiv img, .underDevelopmentImgDiv img{
     width: 100%;
 }
 

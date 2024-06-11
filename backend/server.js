@@ -12,7 +12,7 @@ process.on("uncaughtException", (err)=>{
 })
 
 // Databse Connection:
-connectDB();
+connectDB;
 
 
 // Listening to server:

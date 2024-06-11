@@ -1,10 +1,10 @@
 import React from 'react'
-import NotFound from '../Components/NotFound'
+import UnderDevelopment from '../Components/UnderDevelopment'
 
 function DetectSkinCancer() {
   return (
     <div>
-        <NotFound/>
+        <UnderDevelopment/>
     </div>
   )
 }

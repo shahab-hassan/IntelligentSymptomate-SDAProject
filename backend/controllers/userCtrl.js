@@ -1,54 +1,21 @@
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
 
 const userModel = require("../models/userModel")
 const sendToken = require("../utils/sendToken")
+const UserFactory = require('../utils/userFactory');
+const sendEmail = require("../utils/sendEmail");
 
-exports.registerUser = asyncHandler(async(req, res)=>{
-    
-    let {firstName, lastName, username, email, password, confirmPass} = req.body;
-
-    if(!firstName || !username || !email || !password || !confirmPass){
-        res.status(400)
-        throw new Error("All fields are required!")
+exports.registerUser = asyncHandler(async (req, res) => {
+    try {
+      const newUser = await UserFactory.createUser(req.body);
+      res.status(201).json({ success: true, newUser });
+    } catch (error) {
+      res.status(400);
+      throw new Error(error.message);
     }
-    
-    if(await userModel.findOne({username})){
-        res.status(400)
-        throw new Error("Username already taken!")
-    }
-    if(await userModel.findOne({email})){
-        res.status(400)
-        throw new Error("Email is already registered!")
-    }
-    if(password.length<8){
-        res.status(400)
-        throw new Error("For password, use 8 or more characters with a mix of letters, numbers & symbols!")
-    }
-
-    if(password !== confirmPass){
-        res.status(400)
-        throw new Error("Passwords do not match...")
-    }
-    
-    let hashPassword = await bcrypt.hash(password, 10);
-    
-    let fullName = firstName + " " + lastName;
-
-    let newUser;
-    try{
-        newUser = await userModel.create({fullName, username, email, password: hashPassword});
-    }
-    catch(e){
-        res.status(400)
-        throw new Error(e)
-    }
-
-    res.status(201).json({
-        success: true,
-        newUser
-    })
-})
+  });
 
 exports.loginUser = asyncHandler(async (req, res)=>{
 
@@ -87,3 +54,71 @@ exports.logoutUser = asyncHandler(async (req, res)=>{
         message: "Logged out!"
     })
 })
+
+
+exports.resetPasswordRequest = asyncHandler(async (req, res) => {
+    const { email } = req.body;
+
+    const user = await userModel.findOne({ email });
+    if (!user) {
+        res.status(404);
+        throw new Error("User not found with this email");
+    }
+
+    const resetToken = user.getResetPasswordToken();
+    await user.save();
+
+    const resetUrl = `http://localhost:3000/resetPassword/${resetToken}`;
+
+    const message = `
+        <h1>You have requested a password reset</h1>
+        <p>Please go to this link to reset your password</p>
+        <a href=${resetUrl} clicktracking=off>${resetUrl}</a>
+    `;
+
+    try {
+        await sendEmail({
+            to: user.email,
+            subject: "Password Reset Request",
+            text: message,
+        });
+
+        res.status(200).json({ success: true, message: "Email sent" });
+    } catch (error) {
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpire = undefined;
+        await user.save();
+
+        console.error('Error sending email:', error);
+        res.status(500);
+        throw new Error("Email could not be sent");
+    }
+});
+
+
+exports.resetPassword = asyncHandler(async (req, res) => {
+    const resetPasswordToken = crypto.createHash("sha256").update(req.params.token).digest("hex");
+
+    const user = await userModel.findOne({
+        resetPasswordToken,
+        resetPasswordExpire: { $gt: Date.now() },
+    });
+
+    if (!user) {
+        res.status(400);
+        throw new Error("Invalid token or token has expired");
+    }
+
+    const { password, confirmPass } = req.body;
+    if (password !== confirmPass) {
+        res.status(400);
+        throw new Error("Passwords do not match");
+    }
+
+    user.password = await bcrypt.hash(password, 10);
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
+
+    res.status(200).json({ success: true, message: "Password reset successful" });
+});
